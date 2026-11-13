@@ -12,6 +12,8 @@ node dev-server.js
 
 Open `http://localhost:8000/` on the PC. To test on another device on the same Wi‑Fi, set `HOST=0.0.0.0` before starting the server, then open `http://<PC-LAN-IP>:8000/` on the phone. For install prompts, offline service-worker support, and access outside your local network, publish this repository to a static host with HTTPS. This repository includes a GitHub Pages workflow that deploys on each push to `main`. Then use the browser’s **Install app** or **Add to Home Screen** command. Browser storage is local to each device; settings, history, variables, and spreadsheet data do not sync between devices.
 
+For a new GitHub repository, set **Settings → Pages → Build and deployment → Source** to **GitHub Actions**. After the first successful workflow run, the site is available at `https://<github-user>.github.io/<repository-name>/`.
+
 ## Features
 
 - Responsive touch keypad, mouse input, keyboard input, mode menu, shift/alpha indicators, editable expression and replayable history.
