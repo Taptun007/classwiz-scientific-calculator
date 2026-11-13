@@ -1,7 +1,7 @@
 {
   "name": "ClassWiz Studio Scientific Calculator",
   "short_name": "ClassWiz",
-  "description": "An independent, installable scientific calculator with twelve modes.",
+  "description": "An independent, installable scientific calculator with graphing and twelve calculation modes.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

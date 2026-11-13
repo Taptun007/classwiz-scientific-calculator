@@ -1,5 +1,5 @@
-const CACHE = 'classwiz-studio-v3';
-const FILES = ['./', './index.html', './styles.css?v=3', './app.js?v=3', './manifest.webmanifest?v=3', './icon.svg?v=3'];
+const CACHE = 'classwiz-studio-v4';
+const FILES = ['./', './index.html', './styles.css?v=4', './app.js?v=4', './graph.js?v=4', './manifest.webmanifest?v=4', './icon.svg?v=4'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)));
   self.skipWaiting();

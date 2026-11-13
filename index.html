@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#17231f">
-  <meta name="description" content="A responsive, installable scientific calculator with twelve calculation modes.">
-  <link rel="manifest" href="manifest.webmanifest?v=3">
-  <link rel="icon" href="icon.svg?v=3" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <meta name="description" content="A responsive scientific calculator with function graphing and twelve calculation modes.">
+  <link rel="manifest" href="manifest.webmanifest?v=4">
+  <link rel="icon" href="icon.svg?v=4" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=4">
   <title>ClassWiz Studio · Scientific Calculator</title>
 </head>
 <body>
@@ -73,7 +73,20 @@
   </div><div class="dialog-actions"><button id="resetCalc" class="danger-button">Reset all calculator data</button><button data-close="setupDialog" class="primary-button">Done</button></div></dialog>
   <dialog id="constantsDialog" class="dialog"><div class="dialog-head"><div><span class="section-kicker">REFERENCE</span><h2>Scientific constants</h2></div><button class="close-dialog" data-close="constantsDialog" aria-label="Close">×</button></div><label class="search-label">Find a constant<input id="constantSearch" type="search" placeholder="Name or symbol"></label><div id="constantList" class="constant-list"></div></dialog>
   <dialog id="convertDialog" class="dialog"><div class="dialog-head"><div><span class="section-kicker">UNIT CONVERSION</span><h2>Convert a value</h2></div><button class="close-dialog" data-close="convertDialog" aria-label="Close">×</button></div><div class="convert-form"><label>Value<input id="convertValue" type="number" value="1" step="any"></label><label>From<select id="convertFrom"></select></label><button id="swapUnits" class="swap-button" aria-label="Swap units">⇄</button><label>To<select id="convertTo"></select></label><button id="doConvert" class="primary-button">Convert</button><output id="convertResult"></output></div></dialog>
+  <dialog id="graphDialog" class="dialog graph-dialog" aria-labelledby="graphTitle">
+    <header class="graph-header"><div><span class="section-kicker">FUNCTION PLOTTER</span><h2 id="graphTitle">Graphing</h2></div><button class="close-dialog" id="closeGraph" aria-label="Close graph">×</button></header>
+    <div class="graph-layout">
+      <aside class="graph-sidebar"><div class="graph-sidebar-heading"><strong>Expressions</strong><span>Use x as the variable</span></div><div id="graphFunctions" class="graph-functions"></div><button id="addGraphFunction" class="graph-add">＋ Add function</button><div class="graph-help">Examples: <code>x^2</code>, <code>sin(x)</code>, <code>sqrt(x+4)</code></div></aside>
+      <section class="graph-plot-panel" aria-label="Interactive graph">
+        <div class="graph-toolbar"><button type="button" data-graph-action="zoom-in" aria-label="Zoom in">＋</button><button type="button" data-graph-action="zoom-out" aria-label="Zoom out">−</button><button type="button" data-graph-action="fit">Fit</button><button type="button" data-graph-action="reset">Reset</button><span class="graph-range" id="graphRange"></span></div>
+        <div class="graph-canvas-wrap"><canvas id="graphCanvas" aria-label="Function graph. Drag to pan, scroll or use plus and minus to zoom, click to trace."></canvas></div>
+        <div class="graph-footer"><span id="graphTrace">Click or tap the graph to inspect a point.</span><span>Drag to pan · scroll to zoom</span></div>
+        <div id="graphError" class="graph-error" role="status"></div>
+      </section>
+    </div>
+  </dialog>
   <div id="toast" class="toast" role="status"></div>
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
+  <script src="graph.js?v=4"></script>
 </body>
 </html>

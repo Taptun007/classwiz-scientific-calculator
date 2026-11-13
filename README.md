@@ -17,7 +17,8 @@ For a new GitHub repository, set **Settings → Pages → Build and deployment �
 ## Features
 
 - Responsive touch keypad, mouse input, keyboard input, mode menu, shift/alpha indicators, editable expression and replayable history.
-- Twelve workspaces: Calculate, Complex, Base‑N, Matrix, Vector, Statistics, Distribution, Spreadsheet, Table, Equation/Func, Inequality, and Ratio.
+- Thirteen workspaces: Calculate, Graphing, Complex, Base‑N, Matrix, Vector, Statistics, Distribution, Spreadsheet, Table, Equation/Func, Inequality, and Ratio.
+- Interactive function graphing for up to six expressions, with a coordinate grid, trace values, pan, zoom, and y-fit. Enter a function such as x^2 in Calculate, open MENU → Graphing, or choose OPTN → Graph equations. Trigonometric curves follow the selected degree/radian/gradian setting.
 - Setup for angle units, natural/linear input display preference, number format, precision, fraction and complex result preferences, spreadsheet recalculation, and display contrast.
 - A 47-entry scientific-constant catalog and unit conversion across length, area, volume, mass, velocity, pressure, energy, power, and temperature. The conversion picker includes the fx‑991EX’s documented unit pairs plus common related units.
 - Settings, answer memory, variables, history, and spreadsheet data stored in browser local storage. A clear-all control resets calculator data.
