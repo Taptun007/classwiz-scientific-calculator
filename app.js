@@ -36,25 +36,102 @@
   function fail(err){error.textContent=err?.message||String(err);result.textContent='';}
   function setMode(id){state.mode=id;state.expr='';input.value='';modeOutput='';render();$('#menuDialog').close();save()}
   function render(){document.body.classList.toggle('compact',state.compact);$('#calculator').classList.toggle('powered-off',!state.powered);document.documentElement.style.setProperty('--screen',`hsl(92 28% ${83-(state.contrast-55)*.09}%)`);$('#modeBadge').textContent=title().toUpperCase();$('#modeTitle').textContent=title();$('#screenMode').textContent=title().toUpperCase();$('#angleIndicator').textContent=state.angle.toUpperCase();$('#shiftIndicator').classList.toggle('indicator-off',!shift);$('#alphaIndicator').classList.toggle('indicator-off',!alpha);$('#memoryIndicator').classList.toggle('indicator-off',!state.memory);input.value=state.expr;result.textContent=state.result;$('#ioSetting').value=state.io;$('#angleSetting').value=state.angle;$('#formatSetting').value=state.format;$('#digitsSetting').value=state.digits;$('#fractionSetting').value=state.fraction;$('#complexSetting').value=state.complex;$('#engSetting').checked=state.engineering;$('#freqSetting').checked=state.frequency;$('#autoCalcSetting').checked=state.autoCalc;$('#formulaSetting').checked=state.showFormula;$('#complexRootsSetting').checked=state.complexRoots;$('#twoTablesSetting').checked=state.twoTables;$('#decimalSetting').value=state.decimal;$('#separatorSetting').value=state.separator;$('#compactSetting').checked=state.compact;$('#contrastSetting').value=state.contrast;$('#multilineSetting').value=state.multiline;$('#qrSetting').value=state.qrVersion;renderKeys();renderHistory();renderWorkbench();}
-  const keySpec=[
-    ['SHIFT','shift','ALPHA','SHIFT'],['ALPHA','alpha','A','ALPHA'],['MENU','menu','SETUP','MENU'],['◀','left','◀','◀'],['▶','right','▶','▶'],['AC','AC','OFF','AC'],
-    ['sin','sin(','sin⁻¹','SIN'],['cos','cos(','cos⁻¹','COS'],['tan','tan(','tan⁻¹','TAN'],['log','log(','10ˣ','LOG'],['ln','ln(','eˣ','LN'],['√','sqrt(','x³','SQRT'],
-    ['(','(','[','('],[')',')',']',')'],['xʸ','^','∛','^'],['÷','/','π','/'],['×','*','e','*'],['DEL','DEL','DEL','DEL'],
-    ['7','7','A','7'],['8','8','B','8'],['9','9','C','9'],['−','-','D','-'],['+','+','E','+'],['Ans','Ans','F','Ans'],
-    ['4','4','M','4'],['5','5','x','5'],['6','6','y','6'],['×','*','nCr(','*'],['÷','/','nPr(','/'],['=','=','SOLVE','ENTER'],
-    ['1','1','π','1'],['2','2','e','2'],['3','3','i','3'],['0','0','0','0'],['.','.','%',' .'],['S↔D','S↔D','ENG','S↔D'],
-    ['STO','STO','RECALL','STO'],['x','x','y','x'],['!','!','Abs(','!'],['10ˣ','10^(','log(','10^('],['(-)','neg','(-)','neg'],['ON/OFF','power','ON/OFF','power']
+  const utilityKeys=[
+    ['OPTN','options','QR','OPTN','function','QR'],['CALC','=','SOLVE','CALC','function','SOLVE'],
+    ['∫dx','integral','d/dx','INTEGRAL','function','d/dx'],['x','x','y','X','function','x']
   ];
-  function renderKeys(){const host=$('#keypad');host.innerHTML='';for(const [label,act,alt,code] of keySpec){const b=document.createElement('button');b.className='key '+(['SHIFT','ALPHA','MENU','AC','DEL','STO','S↔D','ON/OFF'].includes(label)?'control ':'')+(['+','−','×','÷','xʸ'].includes(label)?'operator ':'')+(['sin','cos','tan','log','ln','√','Ans','x','!','10ˣ'].includes(label)?'fn ':'')+(label==='='?'equals ':'');let shown=alpha?(code||alt||label):(shift&&alt!=='SHIFT'&&act!=='shift'?alt:label);b.innerHTML=`${esc(shown)}${shift&&label==='SHIFT'?'':(alt&&alt!==label?`<small>${esc(label)}</small>`:'')}`;b.setAttribute('aria-label',label==='='?'Calculate':label);b.addEventListener('click',()=>handleKey(act,alt,code));host.append(b)}}
+  const functionRows=[
+    [['a/b','/','π','/','function','□/□'],['√','sqrt(','x³','SQRT','function','x³'],['x²','x2','x³','X2','function','x³'],['xʸ','^','∛','X','function','∛'],['log□','log(','10ˣ','LOG','function','10ˣ'],['ln','ln(','eˣ','LN','function','eˣ']],
+    [['(−)','neg','log','NEG','function','log'],['°′″','dms','FACT','DMS','function','FACT'],['x⁻¹','inverse','√','INV','function','√'],['sin','sin(','sin⁻¹','SIN','function','sin⁻¹'],['cos','cos(','cos⁻¹','COS','function','cos⁻¹'],['tan','tan(','tan⁻¹','TAN','function','tan⁻¹']],
+    [['STO','STO','RECALL','STO','memory','RECALL'],['ENG','engineering','ENG','ENG','memory','CONST'],['(','(','[','(','function','Abs'],[')',')',']',')','function',','],['S↔D','S↔D','ENG','S↔D','memory','a/b⇔d/c'],['M+','memoryPlus','M−','M','memory','M−']]
+  ];
+  const numberRows=[
+    [['7','7','A','7','number','CONST'],['8','8','B','8','number','CONV'],['9','9','C','9','number','RESET'],['DEL','DEL','INS','DEL','blue','INS / UNDO'],['AC','AC','OFF','AC','blue','OFF']],
+    [['4','4','M','4','number',''],['5','5','x','5','number',''],['6','6','y','6','number',''],['×','*','nPr(','*','operator','nPr'],['÷','/','nCr(','/','operator','nCr']],
+    [['1','1','π','1','number','Rnd'],['2','2','e','2','number','RanInt'],['3','3','i','3','number','π'],['+','+','π','+','operator','e'],['−','-','−','-','operator','≈']],
+    [['0','0','Ran#','0','number','Ran#'],['.','.','%','.','number','RanInt'],['×10ˣ','10^(','eˣ','TEN','number',''],['Ans','Ans','F','Ans','number','Ans'],['=','=','SOLVE','ENTER','equals','SOLVE']]
+  ];
+  function makeKey(spec){
+    const [label,act,alt,code,kind='function',legend='']=spec;
+    const wrap=document.createElement('div');wrap.className=`key-position ${kind}`;
+    if(legend){const cap=document.createElement('small');cap.className='key-legend';cap.textContent=legend;wrap.append(cap)}
+    const b=document.createElement('button');b.type='button';b.className=`key ${kind}`;
+    const shown=alpha?(code||label):(shift&&alt&&act!=='shift'?alt:label);
+    b.innerHTML=`<span>${esc(shown)}</span>`;b.setAttribute('aria-label',label==='='?'Calculate':label);
+    b.addEventListener('click',()=>handleKey(act,alt,code));wrap.append(b);return wrap;
+  }
+  function makeControl(label,act,alt,kind,legend){return makeKey([label,act,alt,label,kind,legend])}
+  function renderKeys(){
+    const controls=$('#upperControls');controls.innerHTML='';
+    controls.append(makeControl('SHIFT','shift','SHIFT','silver','SHIFT'));
+    controls.append(makeControl('ALPHA','alpha','ALPHA','silver','ALPHA'));
+    const nav=document.createElement('div');nav.className='direction-pad';nav.setAttribute('aria-label','Directional pad');
+    for(const [dir,glyph,where] of [['up','▲','nav-up'],['left','◀','nav-left'],['right','▶','nav-right'],['down','▼','nav-down']]){const b=document.createElement('button');b.type='button';b.className=`nav-key ${where}`;b.setAttribute('aria-label',dir);b.textContent=glyph;b.addEventListener('click',()=>handleKey(dir));nav.append(b)}
+    const hub=document.createElement('span');hub.className='nav-hub';nav.append(hub);controls.append(nav);
+    controls.append(makeControl('MENU','menu','SETUP','silver','MENU · SETUP'));
+    controls.append(makeControl('ON','power','OFF','silver','ON'));
+    const host=$('#keypad');host.innerHTML='';
+    const utility=document.createElement('div');utility.className='key-row utility-row';
+    utility.append(makeKey(utilityKeys[0]),makeKey(utilityKeys[1]));const gap=document.createElement('span');gap.className='key-gap';utility.append(gap,makeKey(utilityKeys[2]),makeKey(utilityKeys[3]));host.append(utility);
+    for(const row of functionRows){const group=document.createElement('div');group.className='key-row function-row';row.forEach(spec=>group.append(makeKey(spec)));host.append(group)}
+    for(const row of numberRows){const group=document.createElement('div');group.className='key-row number-row';row.forEach(spec=>group.append(makeKey(spec)));host.append(group)}
+  }
   function insert(s){const a=input.selectionStart??input.value.length,b=input.selectionEnd??a;const before=input.value.slice(0,a),after=input.value.slice(b);state.expr=before+s+after;input.value=state.expr;input.focus();const pos=before.length+s.length;input.setSelectionRange(pos,pos);save()}
   function deleteAt(){const a=input.selectionStart??input.value.length,b=input.selectionEnd??a;if(a!==b){state.expr=input.value.slice(0,a)+input.value.slice(b);input.setSelectionRange(a,a)}else if(a>0){state.expr=input.value.slice(0,a-1)+input.value.slice(a);input.setSelectionRange(a-1,a-1)}input.value=state.expr;input.focus();save()}
-  function handleKey(act,alt,alphaCode){if(!state.powered&&act!=='power')return;
+  function handleKey(act,alt,alphaCode){
+    if(!state.powered&&act!=='power')return;
     if(act==='shift'){shift=!shift;alpha=false;renderKeys();$('#shiftIndicator').classList.toggle('indicator-off',!shift);$('#alphaIndicator').classList.toggle('indicator-off',!alpha);return}
     if(act==='alpha'){alpha=!alpha;shift=false;renderKeys();$('#shiftIndicator').classList.toggle('indicator-off',!shift);$('#alphaIndicator').classList.toggle('indicator-off',!alpha);return}
-    if(shift){shift=false;renderKeys();$('#shiftIndicator').classList.toggle('indicator-off',true);if(act==='S↔D'){engineeringStep();return}if(act==='menu'){openSetup();return}if(act==='power'||act==='AC'){state.powered=!state.powered;$('#calculator').classList.toggle('powered-off',!state.powered);toast(state.powered?'Calculator on':'Calculator display off');return}if(act==='='){solveNumeric();return}if(act==='STO'){recallMemory();return}const shifted={'sin(':'asin(','cos(':'acos(','tan(':'atan(','log(':'10^(','ln(':'exp(','sqrt(':'^3','^':'cbrt(','/':'pi','*':'e','.':'%','!':'abs(','Ans':'F'};if(shifted[act]){insert(shifted[act]);return}if(act==='left'||act==='right'){handleKey(act);return}if(act==='DEL'){deleteAt();return}}
+    if(shift){
+      shift=false;renderKeys();$('#shiftIndicator').classList.toggle('indicator-off',true);
+      if(act==='S↔D'){engineeringStep();return}
+      if(act==='menu'){openSetup();return}
+      if(act==='power'||act==='AC'){state.powered=!state.powered;$('#calculator').classList.toggle('powered-off',!state.powered);toast(state.powered?'Calculator on':'Calculator display off');return}
+      if(act==='='){solveNumeric();return}
+      if(act==='STO'){recallMemory();return}
+      if(act==='*'&&alt==='nPr('){insert('nPr(');return}
+      if(act==='/'&&alt==='nCr('){insert('nCr(');return}
+      if(act==='+'&&alt==='π'){insert('pi');return}
+      if(act==='x2'){insert('^3');return}
+      if(act==='inverse'){insert('sqrt(');return}
+      if(act==='dms'&&alt==='FACT'){optionAction('prime');return}
+      if(act==='memoryPlus'&&alt==='M−'){memoryAdd(-1);return}
+      if(act==='engineering'&&alt==='RECALL'){recallMemory();return}
+      if(act==='constants'){renderConstants();$('#constantsDialog').showModal();return}
+      if(act==='conversion'){populateConvert();$('#convertDialog').showModal();return}
+      if(act==='reset'){$('#resetCalc').click();return}
+      const shifted={'sin(':'asin(','cos(':'acos(','tan(':'atan(','log(':'10^(','ln(':'exp(','sqrt(':'^3','^':'cbrt(','/':'pi','*':'e','.':'%','!':'abs(','Ans':'F','10^(':'exp('};
+      if(shifted[act]){insert(shifted[act]);return}
+      if(['left','right','up','down'].includes(act)){handleKey(act);return}
+      if(act==='DEL'){deleteAt();return}
+    }
     if(alpha){alpha=false;renderKeys();$('#alphaIndicator').classList.toggle('indicator-off',true);const v=(alphaCode||alt||'').toUpperCase();if(['A','B','C','D','E','F','M','X','Y'].includes(v)){insert(v==='X'?'x':v==='Y'?'y':v);return}if(alt&&alt!=='ALPHA'){insert(alt);return}}
-    if(act==='menu'){openMenu();return}if(act==='left'||act==='right'){const p=input.selectionStart??0,n=act==='left'?Math.max(0,p-1):Math.min(input.value.length,p+1);input.focus();input.setSelectionRange(n,n);return}if(act==='AC'){state.expr='';input.value='';error.textContent='';result.textContent='0';state.result='0';save();return}if(act==='DEL'){deleteAt();return}if(act==='='){calculate();return}if(act==='S↔D'){toggleSD();return}if(act==='STO'){storeAns();return}if(act==='power'){state.powered=!state.powered;$('#calculator').classList.toggle('powered-off',!state.powered);toast(state.powered?'Calculator on':'Calculator display off');return}if(act==='neg'){insert('-');return}if(act==='Ans'){insert('Ans');return}insert(act)
-  }  function toggleSD(){const n=Number(state.ans);if(!Number.isFinite(n)){toast('No numeric answer to convert');return}if(state.result.includes('/'))setAnswer(fmt(n),n);else{const [p,q]=approxFraction(n,1000000);let text;if(q===1)text=String(p);else if(state.fraction==='Mixed'&&Math.abs(p)>=q){const whole=Math.trunc(p/q),rem=Math.abs(p%q);text=rem?`${whole} ${rem}/${q}`:String(whole)}else text=`${p}/${q}`;setAnswer(text,n)}}
+    if(act==='menu'){openMenu();return}
+    if(act==='options'){openOptions();return}
+    if(act==='integral'){integralTool();return}
+    if(act==='left'||act==='right'){const p=input.selectionStart??0,n=act==='left'?Math.max(0,p-1):Math.min(input.value.length,p+1);input.focus();input.setSelectionRange(n,n);return}
+    if(act==='up'){loadHistory(-1);return}if(act==='down'){loadHistory(1);return}
+    if(act==='AC'){state.expr='';input.value='';error.textContent='';result.textContent='0';state.result='0';save();return}
+    if(act==='DEL'){deleteAt();return}
+    if(act==='='){calculate();return}
+    if(act==='S↔D'){toggleSD();return}
+    if(act==='STO'){storeAns();return}
+    if(act==='power'){state.powered=!state.powered;$('#calculator').classList.toggle('powered-off',!state.powered);toast(state.powered?'Calculator on':'Calculator display off');return}
+    if(act==='x2'){insert('^2');return}
+    if(act==='inverse'){insert('^(-1)');return}
+    if(act==='dms'){dmsStep();return}
+    if(act==='engineering'){engineeringStep();return}
+    if(act==='memoryPlus'){memoryAdd();return}
+    if(act==='constants'){renderConstants();$('#constantsDialog').showModal();return}
+    if(act==='conversion'){populateConvert();$('#convertDialog').showModal();return}
+    if(act==='reset'){$('#resetCalc').click();return}
+    if(act==='neg'){insert('-');return}
+    if(act==='Ans'){insert('Ans');return}
+    insert(act)
+  }
+  function memoryAdd(sign=1){const next=(Number(state.variables.M)||0)+sign*(Number(state.ans)||0);state.variables.M=next;state.memory=next;save();render();toast(sign<0?'M− updated':'M+ updated')}
+  function dmsStep(){try{const value=evalExpr(input.value||String(state.ans));const sign=value<0?'−':'',absolute=Math.abs(value),degrees=Math.floor(absolute),minutesFloat=(absolute-degrees)*60,minutes=Math.floor(minutesFloat),seconds=(minutesFloat-minutes)*60;setAnswer(`${sign}${degrees}°${minutes}′${fmt(seconds)}″`,value)}catch(e){fail(e)}}
+  function toggleSD(){const n=Number(state.ans);if(!Number.isFinite(n)){toast('No numeric answer to convert');return}if(state.result.includes('/'))setAnswer(fmt(n),n);else{const [p,q]=approxFraction(n,1000000);let text;if(q===1)text=String(p);else if(state.fraction==='Mixed'&&Math.abs(p)>=q){const whole=Math.trunc(p/q),rem=Math.abs(p%q);text=rem?`${whole} ${rem}/${q}`:String(whole)}else text=`${p}/${q}`;setAnswer(text,n)}}
   function engineeringStep(){const n=Number(state.ans);if(!Number.isFinite(n)||n===0){setAnswer('0',0);return}const exponent=Math.floor(Math.log10(Math.abs(n))/3)*3,mantissa=n/10**exponent,symbol=({'-12':'p','-9':'n','-6':'μ','-3':'m','0':'','3':'k','6':'M','9':'G','12':'T'})[exponent];setAnswer(state.engineering&&symbol!==undefined?`${fmt(mantissa)} ${symbol}`:`${fmt(mantissa)} × 10^${exponent}`,n)}  function approxFraction(x,maxDen){if(!Number.isFinite(x))return[0,1];const sign=Math.sign(x);x=Math.abs(x);let bestN=Math.round(x),bestD=1,best=Infinity;for(let d=1;d<=Math.min(maxDen,10000);d++){const n=Math.round(x*d),e=Math.abs(x-n/d);if(e<best){best=e;bestN=n;bestD=d;if(e<1e-12)break}}const gcd=(a,b)=>b?gcd(b,a%b):a;const g=gcd(bestN,bestD);return[sign*bestN/g,bestD/g]}
   function storeAns(){const name=prompt('Store the current answer in A–F, M, x, or y');if(!name)return;const k=name.trim().toUpperCase();if(!['A','B','C','D','E','F','M','X','Y'].includes(k)){toast('Choose A–F or M');return}state.variables[k]=state.ans;if(k==='M')state.memory=state.ans;save();render();toast(`Answer stored in ${k}`)}
   function recallMemory(){const name=prompt('Recall variable A–F, M, x, or y');if(!name)return;const k=name.trim().toUpperCase();if(!['A','B','C','D','E','F','M','X','Y'].includes(k)){toast('Choose A–F, M, x, or y');return}if(!(k in state.variables)){toast(`No value stored in ${k}`);return}insert(k==='X'?'x':k==='Y'?'y':k);}  function calculate(){state.expr=input.value;if(state.mode!=='calc'){const action={complex:'complex',base:'base',matrix:'matrix',vector:'vector',stats:'stats',dist:'distribution',sheet:'sheetRecalc',table:'tableRun',equation:'equation',inequality:'inequality',ratio:'ratio'}[state.mode];if(action){runWorkbench(action);return}}try{const value=evalExpr(state.expr);if(typeof value!=='number'||!Number.isFinite(value))throw Error('Result is outside the real number range');setAnswer(fmt(value),value);pushHistory(state.expr,state.result)}catch(e){fail(e)}save()}  function solveNumeric(){if(!state.expr){toast('Enter an equation first');return}try{const expr=state.expr.replace(/=+/g,'-(')+')',f=x=>evalExpr(expr,{x}),seed=Number(state.variables.X??0);let x=seed,root=null;for(let k=0;k<60;k++){const y=f(x);if(Math.abs(y)<1e-10){root=x;break}const h=1e-5*Math.max(1,Math.abs(x)),d=(f(x+h)-f(x-h))/(2*h);if(!Number.isFinite(d)||Math.abs(d)<1e-12)break;const next=x-y/d;if(!Number.isFinite(next)||Math.abs(next)>1e12)break;if(Math.abs(next-x)<1e-10){root=next;break}x=next}if(root===null){const candidates=[];for(const radius of [10,100,1000]){let lastX=-radius,lastY;try{lastY=f(lastX)}catch{}for(let i=1;i<=4000;i++){const curX=-radius+2*radius*i/4000;let curY;try{curY=f(curX)}catch{lastX=curX;lastY=undefined;continue}if(lastY!==undefined&&(lastY===0||curY===0||Math.sign(lastY)!==Math.sign(curY))){let lo=lastX,hi=curX,fl=lastY;for(let j=0;j<70;j++){const mid=(lo+hi)/2,fm=f(mid);if(Math.abs(fm)<1e-12){lo=hi=mid;break}if(Math.sign(fm)===Math.sign(fl)){lo=mid;fl=fm}else hi=mid}candidates.push((lo+hi)/2)}lastX=curX;lastY=curY}if(candidates.length)break}if(candidates.length)root=candidates.sort((a,b)=>Math.abs(a-seed)-Math.abs(b-seed))[0]}if(root===null)throw Error('Could not locate a real root; try a closer starting value');setAnswer(`x ≈ ${fmt(root)}  (numerical)`,root);pushHistory(`SOLVE(${state.expr})`,state.result)}catch(e){fail(e)}}  function pushHistory(expr,res){if(!expr)return;state.history.unshift({expr,result:res,time:Date.now()});state.history=state.history.slice(0,80);activeHistory=-1;save();renderHistory()}

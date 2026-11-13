@@ -11,31 +11,43 @@
   <title>ClassWiz Studio · Scientific Calculator</title>
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="./" aria-label="ClassWiz Studio home"><span class="brand-mark">∑</span><span><strong>ClassWiz</strong><small>STUDIO</small></span></a>
-    <div class="top-meta"><span class="device-note">SCIENTIFIC CALCULATOR</span><span id="modeBadge" class="mode-badge">CALCULATE</span><button class="icon-button" id="installBtn" hidden>Install app</button><button class="icon-button" id="setupBtn" aria-label="Open setup">⚙</button></div>
-  </header>
+  <span id="modeBadge" class="sr-only">CALCULATE</span>
   <main class="layout">
     <section class="calculator" id="calculator">
-      <div class="calc-head"><div><div class="model-label">SCIENTIFIC · 12 MODES</div><h1 id="modeTitle">Calculate</h1></div><div class="indicators" aria-live="polite"><span id="angleIndicator">DEG</span><span id="shiftIndicator" class="indicator-off">SHIFT</span><span id="alphaIndicator" class="indicator-off">ALPHA</span><span id="memoryIndicator" class="indicator-off">M</span></div></div>
-      <div class="screen" id="screen">
-        <div class="screen-line"><span id="screenMode">CALCULATE</span><span id="screenFlags">Math · DEG</span></div>
-        <div class="history-preview" id="historyPreview" aria-live="polite"></div>
-        <label class="sr-only" for="expression">Expression</label>
-        <input id="expression" class="expression" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Enter an expression" aria-label="Enter expression">
-        <div id="result" class="result" aria-live="polite">0</div>
-        <div id="error" class="error" role="status"></div>
+      <div class="device-shell">
+        <div class="device-header">
+          <div class="device-brand"><strong>CASIO</strong><span>fx‑991EX</span><b>CLASSWIZ</b></div>
+          <div class="solar-cell" aria-label="Solar panel"></div>
+        </div>
+        <div class="lcd-frame">
+          <div class="screen" id="screen">
+            <div class="screen-line">
+              <span id="screenMode">CALCULATE</span>
+              <div class="indicators" aria-live="polite"><span id="angleIndicator">DEG</span><span id="shiftIndicator" class="indicator-off">SHIFT</span><span id="alphaIndicator" class="indicator-off">ALPHA</span><span id="memoryIndicator" class="indicator-off">M</span></div>
+            </div>
+            <div class="display-mode"><h1 id="modeTitle">Calculate</h1><span id="screenFlags">Math · DEG</span></div>
+            <div class="history-preview" id="historyPreview" aria-live="polite"></div>
+            <label class="sr-only" for="expression">Expression</label>
+            <input id="expression" class="expression" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Enter an expression" aria-label="Enter expression">
+            <div id="result" class="result" aria-live="polite">0</div>
+            <div id="error" class="error" role="status"></div>
+          </div>
+          <section id="workbench" class="workbench" aria-live="polite"></section>
+        </div>
+        <div id="upperControls" class="upper-controls" aria-label="Navigation and mode keys"></div>
+        <div class="keypad" id="keypad" aria-label="Calculator keypad"></div>
+        <p class="fineprint">Independent educational calculator · not affiliated with Casio</p>
       </div>
-      <section id="workbench" class="workbench" aria-live="polite"></section>
-      <div class="toolbar"><button data-action="menu" class="soft-key">MENU</button><button data-action="options" class="soft-key">OPTN</button><button data-action="history" class="soft-key">HISTORY</button><button data-action="clearAll" class="soft-key">CLR</button></div>
-      <div class="keypad" id="keypad" aria-label="Calculator keypad"></div>
-      <p class="fineprint">Independent educational calculator · not affiliated with Casio</p>
+      <details class="extras-panel">
+        <summary>History, install &amp; settings</summary>
+        <div class="extra-actions"><button id="installBtn" class="icon-button" hidden>Install app</button><button id="setupBtn" class="icon-button" aria-label="Open setup">SETUP</button><button data-action="clearAll" class="icon-button">Clear entry</button></div>
+        <aside class="side-panel">
+          <div class="panel-heading"><div><span class="section-kicker">YOUR WORK</span><h2>History</h2></div><button id="clearHistory" class="text-button">Clear</button></div>
+          <div id="historyList" class="history-list"><div class="empty-state">Your calculations will appear here.</div></div>
+          <div class="quick-guide"><span class="section-kicker">QUICK GUIDE</span><p>Enter an expression on the LCD or use the physical-style keys. Switch modes with <b>MENU</b>.</p><div class="guide-chips"><span>Enter =</span><span>Esc AC</span><span>↑ ↓ history</span><span>Shift + key</span></div></div>
+        </aside>
+      </details>
     </section>
-    <aside class="side-panel">
-      <div class="panel-heading"><div><span class="section-kicker">YOUR WORK</span><h2>History</h2></div><button id="clearHistory" class="text-button">Clear</button></div>
-      <div id="historyList" class="history-list"><div class="empty-state">Your calculations will appear here.</div></div>
-      <div class="quick-guide"><span class="section-kicker">QUICK GUIDE</span><p>Use the keypad, tap the expression to edit it, or type from your keyboard. Switch modes with <b>MENU</b>.</p><div class="guide-chips"><span>Enter =</span><span>Esc AC</span><span>↑ ↓ history</span><span>Shift + key</span></div></div>
-    </aside>
   </main>
   <dialog id="menuDialog" class="dialog"><div class="dialog-head"><div><span class="section-kicker">CHOOSE A WORKSPACE</span><h2>Mode menu</h2></div><button class="close-dialog" data-close="menuDialog" aria-label="Close">×</button></div><div id="modeGrid" class="mode-grid"></div></dialog>
   <dialog id="optionsDialog" class="dialog"><div class="dialog-head"><div><span class="section-kicker">CALCULATOR TOOLS</span><h2>Options</h2></div><button class="close-dialog" data-close="optionsDialog" aria-label="Close">×</button></div><div id="optionList" class="option-list"></div></dialog>

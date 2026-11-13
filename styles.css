@@ -8,3 +8,74 @@
 
 
 .matrix-grid-editor{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.matrix-entry{display:grid;gap:5px;color:#707c73;font-size:10px}.matrix-entry textarea{width:100%;min-width:0;border:1px solid var(--line);border-radius:7px;padding:8px;background:#fff;color:var(--ink);font:12px 'DM Mono',monospace;resize:vertical}.matrix-entry input{width:100%;min-width:0}
+
+/* Handheld fx-991EX face: solar panel, LCD, navigation, function rows, then the five-column number pad. */
+:root{--ink:#171b1d;--muted:#aaa99f;--paper:#d5d3ca;--panel:#202426;--line:#3b4142;--green:#426a50;--mint:#d8e2d3;--screen:#c8cfaa;--shadow:0 25px 70px #15171555;--radius:12px}
+html{background:#d2d0c7}
+body{min-height:100vh;background:radial-gradient(ellipse at 50% 5%,#f0eee8 0,#dedcd3 44%,#c9c7bf 100%);color:#17191a;font-family:Arial,Helvetica,sans-serif;padding:16px 0 36px}
+.topbar{display:none}
+.layout{display:grid;grid-template-columns:minmax(0,420px);justify-content:center;max-width:none;margin:0 auto;padding:0 10px;gap:16px}
+.calculator{min-width:0;padding:0;background:transparent;border:0;border-radius:0;box-shadow:none}
+.device-shell{position:relative;width:100%;padding:15px 15px 14px;border:5px solid #d7d5cb;border-radius:36px;background:linear-gradient(145deg,#343a3c 0%,#1b1e20 24%,#25292b 70%,#111416 100%);box-shadow:inset 0 0 0 2px #4d5251,inset 0 0 0 5px #16191a,0 20px 44px #28292266;color:#f0eee3}
+.device-header{height:76px;padding:2px 6px 9px;display:grid;grid-template-columns:1fr 1.12fr;align-items:center;gap:14px}
+.device-brand{display:grid;align-content:center;line-height:1.05;letter-spacing:.04em}
+.device-brand strong{font-size:24px;font-weight:800;letter-spacing:-.04em;color:#dfe3e1}
+.device-brand span{font-size:13px;font-weight:700;color:#d7d8d0;margin-top:7px}
+.device-brand b{font-size:12px;letter-spacing:.28em;color:#bf8f9a;margin-top:4px}
+.solar-cell{height:52px;border:4px solid #41484a;border-radius:8px;background:repeating-linear-gradient(90deg,#756346 0 17px,#9a8159 18px 20px,#614f39 21px 23px);box-shadow:inset 0 0 0 2px #554832,0 1px 2px #0008;position:relative}
+.solar-cell::after{content:"";position:absolute;inset:4px;background:linear-gradient(155deg,#c3aa7a55,#342a1e44 70%);border-radius:2px}
+.lcd-frame{padding:9px;border:2px solid #121516;border-radius:17px;background:linear-gradient(#434849,#292e30);box-shadow:inset 0 2px 4px #000a,0 3px 1px #3e4342;margin:0 1px 11px}
+.screen{min-height:148px;padding:9px 11px 7px;border:1px solid #7e8971;border-radius:8px;background:var(--screen);box-shadow:inset 0 1px 7px #31392730;color:#34402f;display:flex;flex-direction:column}
+.screen-line{display:flex;align-items:center;justify-content:space-between;min-height:14px;color:#515c48;font:8px 'DM Mono',monospace;letter-spacing:.04em}
+.display-mode{display:flex;justify-content:space-between;align-items:center;min-height:21px;color:#59634f;font:8px 'DM Mono',monospace}
+.display-mode h1{font:700 10px 'DM Mono',monospace;letter-spacing:.08em;margin:0;text-transform:uppercase;color:#45523e}
+.display-mode #screenFlags{white-space:nowrap}
+.indicators{display:flex;align-items:center;gap:5px}
+.indicators span{padding:0;border-radius:0;background:transparent;color:#46513e;font:8px 'DM Mono',monospace}
+.indicators .indicator-off{opacity:.2}
+.history-preview{min-height:13px;margin:0;text-align:right;color:#53604a;font:10px 'DM Mono',monospace}
+.expression{width:100%;min-height:27px;padding:1px 0;border:0;outline:0;background:transparent;color:#2f3929;font:15px 'DM Mono',monospace}
+.expression::placeholder{color:#65705a;opacity:.8}
+.result{min-height:32px;color:#293425;text-align:right;font:27px 'DM Mono',monospace;overflow:auto;white-space:nowrap}
+.error{min-height:13px;color:#9a382d;text-align:right;font-size:9px}
+.workbench{margin:7px 0 0;color:#263225}
+.workbench:empty{display:none}
+.wb-card{background:#d9dfc7;border:1px solid #8e987d;border-radius:5px;padding:8px;margin-top:5px;color:#273124}
+.wb-card h3{font-size:10px}
+.wb-grid label{color:#394435}
+.wb-grid input,.wb-grid select,.wb-grid textarea{background:#edf0df;border-color:#929a84;border-radius:3px;font-size:10px;padding:5px}
+.wb-actions button{background:#27302a;color:#f1f0e8;border:0;border-radius:3px}
+.wb-output,.result-inline{color:#273b27;font-size:10px}
+.upper-controls{display:grid;grid-template-columns:minmax(39px,1fr) minmax(39px,1fr) minmax(76px,1.85fr) minmax(39px,1fr) minmax(39px,1fr);align-items:end;gap:4px;margin:7px 2px 9px;min-height:77px}
+.key-position{position:relative;min-width:0;padding-top:10px}
+.key-legend{position:absolute;top:0;left:-3px;right:-3px;overflow:hidden;text-align:center;color:#c7b790;font:700 7px Arial,sans-serif;line-height:9px;white-space:nowrap}
+.key{width:100%;min-width:0;min-height:42px;padding:3px 1px;border:1px solid #111516;border-radius:8px;background:linear-gradient(#303638,#202426);box-shadow:0 2px 0 #101213;color:#efeee6;font:600 12px 'DM Mono',monospace;line-height:1.03;touch-action:manipulation;user-select:none}
+.key:hover{filter:brightness(1.13);background:linear-gradient(#3b4244,#252a2c)}
+.key:active{transform:translateY(1px);box-shadow:0 1px 0 #101213}
+.key.silver{min-height:38px;border-color:#787d79;border-radius:50%;background:linear-gradient(145deg,#eeeae0,#969891);box-shadow:0 2px 0 #131516;color:#202324;font-size:9px;font-weight:800}
+.key.function,.key.memory{background:linear-gradient(#262b2d,#171a1b);color:#eeeae0}
+.key.number,.key.operator,.key.equals{min-height:49px;border-color:#8c8c83;border-radius:7px;background:linear-gradient(#e2dfd4,#c9c6bb);box-shadow:0 2px 0 #a6a49a;color:#171a1b;font:700 18px Arial,sans-serif}
+.key.operator{font-size:21px}
+.key.equals{font-size:18px}
+.key.blue{min-height:49px;border-color:#214971;border-radius:7px;background:linear-gradient(#3474ae,#1d568e);box-shadow:0 2px 0 #173c61;color:#fff;font:700 16px Arial,sans-serif}
+.direction-pad{position:relative;justify-self:center;width:78px;height:72px;border-radius:50%;background:#171a1c;box-shadow:inset 0 0 0 2px #4b5152,0 2px 0 #101213}
+.nav-key{position:absolute;display:grid;place-items:center;width:27px;height:24px;padding:0;border:1px solid #777b78;border-radius:6px;background:linear-gradient(#e8e5dc,#aaa9a3);color:#1b1e1f;font:700 11px Arial,sans-serif;box-shadow:0 1px 0 #111}
+.nav-up{top:2px;left:25px}.nav-down{bottom:2px;left:25px}.nav-left{left:1px;top:24px}.nav-right{right:1px;top:24px}
+.nav-hub{position:absolute;left:29px;top:26px;width:20px;height:20px;border:2px solid #4a4f50;border-radius:50%;background:#202426;pointer-events:none}
+.keypad{display:grid;gap:6px;margin:0 2px}
+.key-row{display:grid;gap:5px;align-items:end}
+.utility-row{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:0}
+.function-row{grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+.number-row{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.key-gap{min-width:0}
+.utility-row .key{min-height:34px;border-radius:7px;font-size:10px}
+.utility-row .key-legend{color:#c6b894}
+.fineprint{margin:12px 0 0;color:#b8b6ac;font-size:8px;letter-spacing:.02em}
+.extras-panel{width:min(100%,420px);margin:13px auto 0;border:1px solid #777971;border-radius:9px;background:#ebe9e0;color:#242825;box-shadow:0 4px 13px #16171119}
+.extras-panel summary{padding:10px 12px;cursor:pointer;font-size:12px;font-weight:700}
+.extra-actions{display:flex;flex-wrap:wrap;gap:7px;padding:0 12px 12px}
+.extra-actions .icon-button{padding:7px 10px;border:1px solid #a5a69c;border-radius:5px;background:#f7f6f0;color:#2f3732;font-size:10px}
+.side-panel{margin:0 10px 10px;min-height:0;padding:14px;border:1px solid #c5c6bd;border-radius:7px;background:#f8f7f2;box-shadow:none}
+.panel-heading h2{font-size:16px}.history-list{max-height:260px}.history-entry{background:#fff;border-color:#d9dbd2}
+.powered-off .screen>*{visibility:hidden}
+@media(max-width:400px){body{padding:8px 0 24px}.layout{padding:0 7px}.device-shell{padding:12px 10px 11px;border-width:4px;border-radius:31px}.device-header{height:66px;gap:10px}.device-brand strong{font-size:21px}.solar-cell{height:46px}.lcd-frame{padding:7px;margin-bottom:8px}.screen{min-height:137px;padding:8px 9px 6px}.upper-controls{grid-template-columns:minmax(35px,1fr) minmax(35px,1fr) minmax(68px,1.85fr) minmax(35px,1fr) minmax(35px,1fr);gap:3px;margin:6px 1px 8px}.direction-pad{width:70px;height:66px}.nav-up{left:22px}.nav-down{left:22px}.nav-hub{left:25px;top:23px}.nav-key{width:25px;height:22px}.nav-left{top:22px}.nav-right{top:22px}.keypad{gap:5px;margin:0 1px}.function-row,.number-row{gap:3px}.key-position{padding-top:9px}.key-legend{font-size:6px;line-height:8px}.key.function,.key.memory{min-height:39px;font-size:10px}.key.number,.key.operator,.key.equals,.key.blue{min-height:46px}.utility-row .key{min-height:32px}.fineprint{margin-top:10px}}
