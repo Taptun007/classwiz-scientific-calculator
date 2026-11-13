@@ -62,7 +62,7 @@ body{min-height:100vh;background:radial-gradient(ellipse at 50% 5%,#f0eee8 0,#de
 .nav-key{position:absolute;display:grid;place-items:center;width:27px;height:24px;padding:0;border:1px solid #777b78;border-radius:6px;background:linear-gradient(#e8e5dc,#aaa9a3);color:#1b1e1f;font:700 11px Arial,sans-serif;box-shadow:0 1px 0 #111}
 .nav-up{top:2px;left:25px}.nav-down{bottom:2px;left:25px}.nav-left{left:1px;top:24px}.nav-right{right:1px;top:24px}
 .nav-hub{position:absolute;left:29px;top:26px;width:20px;height:20px;border:2px solid #4a4f50;border-radius:50%;background:#202426;pointer-events:none}
-.keypad{display:grid;gap:6px;margin:0 2px}
+.keypad{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;margin:0 2px}
 .key-row{display:grid;gap:5px;align-items:end}
 .utility-row{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:0}
 .function-row{grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
