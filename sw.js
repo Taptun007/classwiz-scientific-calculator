@@ -1,5 +1,5 @@
-const CACHE = 'classwiz-studio-v2';
-const FILES = ['./', './index.html', './styles.css', './app.js', './manifest.webmanifest', './icon.svg'];
+const CACHE = 'classwiz-studio-v3';
+const FILES = ['./', './index.html', './styles.css?v=3', './app.js?v=3', './manifest.webmanifest?v=3', './icon.svg?v=3'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)));
   self.skipWaiting();
@@ -10,11 +10,17 @@ self.addEventListener('activate', event => {
 });
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
-  event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
-    if (response.ok && new URL(event.request.url).origin === self.location.origin) {
-      const copy = response.clone();
-      caches.open(CACHE).then(cache => cache.put(event.request, copy));
+  if (new URL(event.request.url).origin !== self.location.origin) return;
+  event.respondWith((async () => {
+    try {
+      const response = await fetch(event.request);
+      if (response.ok) {
+        const copy = response.clone();
+        await caches.open(CACHE).then(cache => cache.put(event.request, copy));
+      }
+      return response;
+    } catch {
+      return await caches.match(event.request) || (event.request.mode === 'navigate' ? await caches.match('./index.html') : Response.error());
     }
-    return response;
-  }).catch(() => caches.match('./index.html'))));
+  })());
 });
