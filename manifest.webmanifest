@@ -1,0 +1,13 @@
+{
+  "name": "ClassWiz Studio Scientific Calculator",
+  "short_name": "ClassWiz",
+  "description": "An independent, installable scientific calculator with twelve modes.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f5f2",
+  "theme_color": "#17231f",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
